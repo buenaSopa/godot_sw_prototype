@@ -1,0 +1,109 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://scripts/hilt.gd" type="Script" id=1]
+[ext_resource path="res://scenes/Hilt/cyan_light.tres" type="Material" id=2]
+
+[sub_resource type="SpatialMaterial" id=1]
+albedo_color = Color( 0.694118, 0.694118, 0.694118, 1 )
+metallic = 1.0
+roughness = 0.0
+
+[sub_resource type="CylinderMesh" id=2]
+material = SubResource( 1 )
+top_radius = 0.193
+bottom_radius = 0.193
+height = 2.704
+rings = 2
+
+[sub_resource type="SpatialMaterial" id=3]
+albedo_color = Color( 0.8, 0.760784, 0.760784, 1 )
+metallic = 1.0
+roughness = 0.0
+
+[sub_resource type="CylinderMesh" id=4]
+material = SubResource( 3 )
+top_radius = 0.353
+bottom_radius = 0.175
+height = 0.456
+
+[sub_resource type="CylinderMesh" id=6]
+material = ExtResource( 2 )
+top_radius = 0.11
+bottom_radius = 0.171
+height = 7.667
+radial_segments = 4
+rings = 5
+
+[sub_resource type="CapsuleMesh" id=7]
+material = ExtResource( 2 )
+radius = 0.096
+mid_height = 10.009
+radial_segments = 4
+
+[sub_resource type="Animation" id=8]
+length = 0.5
+tracks/0/type = "transform"
+tracks/0/path = NodePath("hilt/blade")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = PoolRealArray( 0, 1, 0, 1.80612, 2.08791e-07, 0, 0, 0, 1, 0.700439, 0.00609589, 0.641632, 0.1, 1, 0, 1.95413, 2.08791e-07, 0, 0, 0, 1, 0.469058, 0.1106, 0.626473, 0.2, 1, 0, 2.79988, 2.08791e-07, 0, 0, 0, 1, 0.469, 0.3, 0.626, 0.3, 1, 0, 3.56508, 2.08791e-07, 0, 0, 0, 1, 0.669, 0.5, 0.626, 0.4, 1, 0, 4.42426, 2.08791e-07, 0, 0, 0, 1, 0.8, 0.7, 0.8, 0.5, 1, 0, 5.50182, 2.08791e-07, 0, 0, 0, 1, 1, 1, 1 )
+
+[sub_resource type="Animation" id=9]
+length = 0.2
+tracks/0/type = "transform"
+tracks/0/path = NodePath("hilt/blade")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = PoolRealArray( 0, 1, 0, 4.33158, 2.08791e-07, 0, 0, 0, 1, 0.7, 0.7, 0.7, 0.1, 1, 0, 2.81461, 2.08791e-07, 0, 0, 0, 1, 0.3, 0.3, 0.3, 0.2, 1, 0, 1.74065, 2.08791e-07, 0, 0, 0, 1, 0.01, 0.01, 0.01 )
+
+[node name="weapon" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="hilt" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000427246, 0.00417328, -0.000900269 )
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="hilthead" type="MeshInstance" parent="hilt"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00105286, 1.55873, -0.00159454 )
+mesh = SubResource( 4 )
+material/0 = null
+
+[node name="blade" type="MeshInstance" parent="hilt"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.50182, 2.08791e-07 )
+mesh = SubResource( 6 )
+material/0 = null
+
+[node name="bladetop" type="MeshInstance" parent="hilt/blade"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 4.23005, -1.84926e-07 )
+mesh = SubResource( 7 )
+material/0 = null
+
+[node name="blade light" type="OmniLight" parent="hilt/blade"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.000427246, 0.000900058, -0.0460567 )
+light_color = Color( 0.156863, 0.00784314, 1, 1 )
+light_energy = 1.34
+light_indirect_energy = 0.0
+light_specular = 0.0
+shadow_enabled = true
+omni_range = 2.0
+omni_shadow_mode = 0
+
+[node name="RayCast" type="RayCast" parent="hilt/blade"]
+transform = Transform( 1, 0, 0, 0, -13.0152, -1.50996e-07, 0, 1.96524e-06, -1, 0, -3.72, 0 )
+enabled = true
+
+[node name="Timer" type="Timer" parent="."]
+process_mode = 0
+wait_time = 0.01
+autostart = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/ignite = SubResource( 8 )
+anims/retract = SubResource( 9 )
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
